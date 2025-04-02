@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
-class TransactionForm extends StatelessWidget {
-  final titleController = TextEditingController();
-  final valueController = TextEditingController();
-
+class TransactionForm extends StatefulWidget {
   final void Function(String, double) onSubmit;
 
   TransactionForm(this.onSubmit, {Key? key}) : super(key: key);
+
+  @override
+  State<TransactionForm> createState() => _TransactionFormState();
+}
+
+class _TransactionFormState extends State<TransactionForm> {
+  final titleController = TextEditingController();
+  final valueController = TextEditingController();
 
   _submitForm() {
     final title = titleController.text;
@@ -16,7 +21,7 @@ class TransactionForm extends StatelessWidget {
       return;
     }
 
-    onSubmit(title, value);
+    widget.onSubmit(title, value);
   }
 
   @override
@@ -30,18 +35,15 @@ class TransactionForm extends StatelessWidget {
             TextField(
               controller: titleController,
               onSubmitted: (_) => _submitForm(),
-              decoration: const InputDecoration(
-                labelText: 'Título',
-              ),
+              decoration: const InputDecoration(labelText: 'Título'),
             ),
             TextField(
               controller: valueController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _submitForm(),
-              decoration: const InputDecoration(
-                labelText: 'Valor (R\$)',
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
               ),
+              onSubmitted: (_) => _submitForm(),
+              decoration: const InputDecoration(labelText: 'Valor (R\$)'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -49,12 +51,10 @@ class TransactionForm extends StatelessWidget {
                 TextButton(
                   child: const Text(
                     'Nova Transação',
-                    style: TextStyle(
-                      color: Colors.purple,
-                    ),
+                    style: TextStyle(color: Colors.purple),
                   ),
                   onPressed: _submitForm,
-                )
+                ),
               ],
             ),
           ],
