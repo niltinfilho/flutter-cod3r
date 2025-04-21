@@ -93,9 +93,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
+
     final appBar = AppBar(
       title: Text('Despesas Pessoais'),
       actions: [
+        if (isLandscape)
+          IconButton(
+            icon: const Icon(Icons.bar_chart),
+            color: Colors.white,
+            iconSize: 28.0,
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+              });
+            },
+          ),
         IconButton(
           icon: const Icon(Icons.add),
           color: Colors.white,
@@ -106,9 +120,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     final availableHeight =
-        MediaQuery.of(context).size.height -
+        mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQuery.padding.top;
 
     return Scaffold(
       appBar: appBar,
@@ -116,27 +130,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Exibir Grafico'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            if (_showChart)
+            if (_showChart || !isLandscape)
               SizedBox(
-                height: availableHeight * 0.25,
+                height: availableHeight * (isLandscape ? 0.55 : 0.25),
                 child: Chart(_recentTransactions),
               ),
             SizedBox(
-              height: availableHeight * 0.75,
+              height: availableHeight * (isLandscape ? 1 : 0.75),
               child: TransactionList(_transactions, _removeTransaction),
             ),
           ],

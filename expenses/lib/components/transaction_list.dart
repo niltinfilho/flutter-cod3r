@@ -11,21 +11,26 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
-        ? Column(
-          children: [
-            Text(
-              'Nenhuma transação cadastrada!',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            SizedBox(height: 20),
-            Container(
-              height: 250,
-              child: Image.asset(
-                'assets/images/waiting.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
+        ? LayoutBuilder(
+          builder: (ctx, constraints) {
+            return Column(
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  'Nenhuma transação cadastrada!',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  height: constraints.maxHeight * 0.6,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            );
+          },
         )
         : ListView.builder(
           itemCount: transactions.length,
@@ -56,11 +61,21 @@ class TransactionList extends StatelessWidget {
                   DateFormat('d MMM y').format(tr.date),
                   style: TextStyle(color: Colors.grey),
                 ),
-                trailing: IconButton(
-                  onPressed: () => onRemove(tr.id),
-                  icon: Icon(Icons.delete),
-                  color: Colors.red,
-                ),
+                trailing:
+                    MediaQuery.of(context).size.width > 480
+                        ? TextButton.icon(
+                          onPressed: () => onRemove(tr.id),
+                          icon: Icon(Icons.delete),
+                          label: Text('Excluir'),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                          ),
+                        )
+                        : IconButton(
+                          onPressed: () => onRemove(tr.id),
+                          icon: Icon(Icons.delete),
+                          color: Colors.red,
+                        ),
               ),
             );
           },
