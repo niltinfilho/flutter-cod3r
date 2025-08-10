@@ -1,4 +1,4 @@
-package Flutter_Cod3r.perguntas
+package com.example.perguntas
 
 import io.flutter.embedding.android.FlutterActivity
 
